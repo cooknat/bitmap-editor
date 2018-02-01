@@ -6,12 +6,15 @@ class BitmapEditor
 
     File.open(file).each do |line|
       line = line.chomp
+      p line
+      # add verification for input validity/format
       args = line.split(' ')   
       case args[0]
       when 'I'       
         create(args[1].to_i,args[2].to_i)
-      when 'C'
+      when 'C'        
       when 'L'  
+        colour(args[1].to_i, args[2].to_i, args[3])
       when 'V'  
       when 'H'
       when 'S'
@@ -25,6 +28,7 @@ class BitmapEditor
   # represent bitmap with a two dimensional array
   def create(m, n)
    @bitmap = Array.new(n){Array.new(m, 'O')}     
+   p @bitmap
   end 
 
   # set all pixels to white
@@ -33,6 +37,8 @@ class BitmapEditor
 
   #Colours the pixel (X,Y) with colour C.
   def colour(x, y, c) 
+    @bitmap[y-1][x-1] = c
+    p @bitmap
   end
   
   #Draw vertical segment of col C in column X between rows Y1 and Y2 (incl).
