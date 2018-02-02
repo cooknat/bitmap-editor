@@ -3,9 +3,9 @@ class BitmapEditor
 
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
-
     File.open(file).each do |line|
-      line = line.chomp       
+      line = line.chomp  
+      next if line == ""
       args = line.split(' ')
       p args
       if valid?(args)         
@@ -19,14 +19,13 @@ class BitmapEditor
         when 'V'  
         when 'H'
         when 'S'       
-            puts "There is no image"
-            break
+            show            
         else
             puts 'unrecognised command :('
             break
         end
       else
-        # need to change message based on reason for failure
+        # need to change message based on reason for failure     
         puts "There is invalid input in the command:  #{line} - please fix and resubmit."  
         break
       end 
@@ -35,21 +34,8 @@ class BitmapEditor
   end  
 
   def valid?(args)
-   # if @bitmap == nil && args[0] != 'I'
-    #  p "You need to create a bitmap before you can manipulate it. Please ensure the first line is an 'I' command."
-   #   return false
-   # end  
-
-    #bitmapRows = @bitmap[0].size-1 ||= 0
-    #bitmapCols = @bitmap.size-1 ||= 0
-
-    if @bitmap != nil
-      bitmapRows = @bitmap[0].size-1 
-      bitmapCols = @bitmap.size-1 
-    else
-      bitmapRows = 0
-      bitmapCols = 0
-    end 
+    bitmapRows = @bitmap&.first&.size || 0 
+    bitmapCols = @bitmap&.size || 0
 
     # this stores the valid values for the arguments for each command type
     lookup = {
@@ -148,6 +134,7 @@ class BitmapEditor
 
   #Show the contents of the current image
   def show
+    @bitmap.each { |row| puts row.join('') }
   end 
 
 end

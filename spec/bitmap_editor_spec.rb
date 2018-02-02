@@ -3,9 +3,6 @@ require './lib/bitmap_editor'
 
 bitmapEditor = BitmapEditor.new   
 
-describe '#run' do
-end	
-
 describe '#valid?' do
 	it 'returns false if the argument array is the wrong size' do	
 	  expect(bitmapEditor.valid?(['V', 3, 4, 'G'])).to be_falsey
@@ -45,5 +42,12 @@ describe '#clear' do
     bitmapEditor.colour(1, 2, 'B')
     bitmapEditor.clear
     expect(bitmapEditor.bitmap[1][0]).to eq('O')
+  end
+end	
+
+describe '#show' do
+	it 'outputs the bitmap to the console as a grid' do 
+	  bitmapEditor.create(3,2) 
+    expect{ bitmapEditor.show }. to output("OO\nOO\nOO\n").to_stdout
   end
 end	
