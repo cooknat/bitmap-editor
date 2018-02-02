@@ -39,3 +39,11 @@ describe '#colour' do
     expect(bitmapEditor.bitmap[1][0]).to eq('B')
   end
 end	
+
+describe '#clear' do
+	it 'sets all pixels to white' do
+    bitmapEditor.colour(1, 2, 'B')
+    bitmapEditor.clear
+    expect(bitmapEditor.bitmap[1][0]).to eq('O')
+  end
+end	

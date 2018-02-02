@@ -12,7 +12,8 @@ class BitmapEditor
         case args[0]
         when 'I'       
           create(args[1].to_i, args[2].to_i)
-        when 'C'        
+        when 'C' 
+          clear       
         when 'L'  
           colour(args[1].to_i, args[2].to_i, args[3])
         when 'V'  
@@ -34,10 +35,10 @@ class BitmapEditor
   end  
 
   def valid?(args)
-    if @bitmap == nil && args[0] != 'I'
-      p "You need to create a bitmap before you can manipulate it. Please ensure the first line is an 'I' command."
-      return false
-    end  
+   # if @bitmap == nil && args[0] != 'I'
+    #  p "You need to create a bitmap before you can manipulate it. Please ensure the first line is an 'I' command."
+   #   return false
+   # end  
 
     #bitmapRows = @bitmap[0].size-1 ||= 0
     #bitmapCols = @bitmap.size-1 ||= 0
@@ -48,8 +49,9 @@ class BitmapEditor
     else
       bitmapRows = 0
       bitmapCols = 0
-    end  
+    end 
 
+    # this stores the valid values for the arguments for each command type
     lookup = {
       'I'=> {
            :len => 3,
@@ -83,6 +85,7 @@ class BitmapEditor
            :len => 1
       }
     }
+ 
 
     settings = lookup[args[0]]   
 
@@ -125,6 +128,8 @@ class BitmapEditor
 
   # set all pixels to white
   def clear
+     @bitmap.map! { |row| row.fill('O') }
+     p @bitmap 
   end
 
   #Colours the pixel (X,Y) with colour C.
