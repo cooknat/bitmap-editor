@@ -51,3 +51,21 @@ describe '#show' do
     expect{ bitmapEditor.show }. to output("OO\nOO\nOO\n").to_stdout
   end
 end	
+
+describe '#vertical' do
+	it 'colours a vertical segment of colour C in column X between rows Y1 and Y2 (incl)' do
+		bitmapEditor.create(5, 6)
+    bitmapEditor.vertical(4, 3, 5, 'A')    
+    segment = [bitmapEditor.bitmap[2][3], bitmapEditor.bitmap[3][3], bitmapEditor.bitmap[4][3]]
+    expect(segment).to eq(['A', 'A', 'A'])    
+  end
+end	
+
+describe '#horizontal' do
+	it 'colours a horizontal segment of colour C in row Y between columns X1 and X2 (incl)' do
+    bitmapEditor.create(5, 6)
+    bitmapEditor.horizontal(1, 4, 5, 'R') 
+    segment = [bitmapEditor.bitmap[4][0], bitmapEditor.bitmap[4][1], bitmapEditor.bitmap[4][2], bitmapEditor.bitmap[4][3]]       	
+    expect(segment).to eq(['R', 'R', 'R', 'R'])   	
+  end
+end	
