@@ -8,16 +8,6 @@ describe '#valid?' do
   	bitmapEditor.create(3,4)
  	  expect(bitmapEditor.valid?('L tiger * s')).to be_falsey
   end	   
-
-  it 'returns false if the specified pixels are not within the bounds of the bitmap' do
-		bitmapEditor.create(3,4)
-		expect(bitmapEditor.valid?(['H', 8, 8, 8, 'P'])).to be_falsey
-	end	
-
-	it 'returns true if the specified pixels are within the bounds of the bitmap' do
-		bitmapEditor.create(3,4)
-		expect(bitmapEditor.valid?(['H', 1, 2, 3, 'P'])).to be_truthy
-	end	
 end  
 
 describe '#create' do 

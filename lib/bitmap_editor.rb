@@ -3,9 +3,9 @@ class BitmapEditor
 
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
+    return puts "please create a bitmap using command 'I' before running other commands." if File.open(file).to_a.first[0] != 'I'
     File.open(file).each do |line|
-      line = line.chomp.strip  
-      next if line == ""
+      line = line.chomp.strip       
       args = line.split(' ')
       #p args
       if valid?(line)         
@@ -14,19 +14,30 @@ class BitmapEditor
           create(args[1].to_i, args[2].to_i)
         when 'C' 
           clear       
-        when 'L'  
-          colour(args[1].to_i, args[2].to_i, args[3])
-        when 'V'  
-          vertical(args[1].to_i, args[2].to_i, args[3].to_i, args[4])
+        when 'L' 
+          if args[1].to_i < @bitmap[0].length && args[2].to_i < @bitmap.length 
+            colour(args[1].to_i, args[2].to_i, args[3])
+          else  
+            puts "You are trying to colour outside the lines, this command will be skipped."  
+          end
+        when 'V'
+          if args[1].to_i < @bitmap[0].length && args[2].to_i < @bitmap.length && args[3].to_i < @bitmap.length  
+            vertical(args[1].to_i, args[2].to_i, args[3].to_i, args[4])
+          else  
+            puts "You are trying to colour outside the lines, this command will be skipped."  
+          end  
         when 'H'
-          horizontal(args[1].to_i, args[2].to_i, args[3].to_i, args[4])
+          if args[1].to_i < @bitmap[0].length && args[2].to_i < @bitmap[0].length && args[3].to_i < @bitmap.length  
+            horizontal(args[1].to_i, args[2].to_i, args[3].to_i, args[4])
+          else  
+            puts "You are trying to colour outside the lines, this command will be skipped."  
+          end  
         when 'S'       
             show         
         end
-      else
-        # need to change message based on reason for failure     
-        puts "There is invalid input in the command: #{line}. Please fix and resubmit"  
-        break 
+      else           
+        puts "The command: #{line} contains invalid commands or an incorrect number of arguments, it will be skipped."  
+        next
       end 
        
     end
@@ -50,12 +61,12 @@ class BitmapEditor
       false
     end 
   end
-
  
   # represent bitmap with a two dimensional array
   def create(rows, cols)
     if rows <= 250 && cols <= 250 
-      @bitmap = Array.new(rows){Array.new(cols, 'O')}          
+      @bitmap = Array.new(rows){Array.new(cols, 'O')}   
+      p @bitmap       
     else
       return 'Please resubmit with M and N values less than or equal to 250' 
     end   
@@ -67,22 +78,22 @@ class BitmapEditor
   end
 
   #Colours the pixel (X,Y) with colour C.
-  def colour(x, y, c) 
-    @bitmap[y-1][x-1] = c  
+  def colour(x, y, c)         
+    @bitmap[y-1][x-1] = c      
   end
   
   #Draw vertical segment of col C in column X between rows Y1 and Y2 (incl).
-  def vertical(x, y1, y2, c) 
+  def vertical(x, y1, y2, c)    
     ([y1-1,y2-1].min).upto([y1-1,y2-1].max) do |num|      
       @bitmap[num][x-1] = c
-    end  
+    end    
   end
 
   #Draw horizontal segment of col C in row Y between columns X1 and X2 (incl)
-  def horizontal(x1, x2, y, c)
+  def horizontal(x1, x2, y, c)    
     ([x1-1,x2-1].min).upto([x1-1,x2-1].max) do |num|
       @bitmap[y-1][num] = c
-    end  
+    end   
   end
 
   #Show the contents of the current image
