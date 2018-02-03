@@ -125,15 +125,16 @@ class BitmapEditor
   end
   
   #Draw vertical segment of col C in column X between rows Y1 and Y2 (incl).
-  def vertical(x, y1, y2, c)
-    (y1-1).upto(y2-1) do |num|
+  def vertical(x, y1, y2, c) 
+    ([y1-1,y2-1].min).upto([y1-1,y2-1].max) do |num|
+      p num
       @bitmap[num][x-1] = c
     end  
   end
 
   #Draw horizontal segment of col C in row Y between columns X1 and X2 (incl)
   def horizontal(x1, x2, y, c)
-    (x1-1).upto(x2-1) do |num|
+    ([x1-1,x2-1].min).upto([x1-1,x2-1].max) do |num|
       @bitmap[y-1][num] = c
     end  
   end
