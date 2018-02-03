@@ -4,12 +4,12 @@ class BitmapEditor
   def run(file)
     return puts "please provide correct file" if file.nil? || !File.exists?(file)
     File.open(file).each do |line|
-      line = line.chomp  
+      line = line.chomp.strip  
       next if line == ""
       args = line.split(' ')
-      p args
-      if valid?(args)         
-        case args[0]
+      #p args
+      if valid?(line)         
+        case line[0]
         when 'I'       
           create(args[1].to_i, args[2].to_i)
         when 'C' 
@@ -32,102 +32,48 @@ class BitmapEditor
     end
   end  
 
-  def valid?(args)
-    bitmapRows = @bitmap&.size || 0 
-    bitmapCols = @bitmap&.first&.size || 0
-
-    # this stores the valid values for the arguments for each command type
-    lookup = {
-      'I'=> {
-           :len => 3,
-           :rows => (1..250).to_a,
-           :columns => (1..250).to_a
-        }, 
-      'C'=> {
-           :len => 1
-        },
-      'L'=> {
-           :len => 4,
-           :column => (1..bitmapCols).to_a,
-           :row => (1..bitmapRows).to_a,           
-           :colour => ('A'..'Z').to_a
-        }, 
-      'H'=> {
-           :len => 5,           
-           :startCol => (1..bitmapCols).to_a,
-           :endCol => (1..bitmapCols).to_a,
-           :row => (1..bitmapRows).to_a,
-           :colour => ('A'..'Z').to_a
-        }, 
-      'V'=> {
-           :len => 5,
-           :column => (1..bitmapCols).to_a,
-           :startRow => (1..bitmapRows).to_a,
-           :endRow => (1..bitmapRows).to_a,
-           :colour => ('A'..'Z').to_a
-        },       
-      'S'=> {
-           :len => 1
-      }
-    }
- 
-
-    settings = lookup[args[0]]   
-
-    case args[0]
-    when 'I'  
-      settings[:len] == args.length &&
-      settings[:rows].include?(args[1].to_i) &&
-      settings[:columns].include?(args[2].to_i)            
-    when 'L' 
-      settings[:len] == args.length &&
-      settings[:column].include?(args[1].to_i) &&
-      settings[:row].include?(args[2].to_i) &&    
-      settings[:colour].include?(args[3])             
-    when 'H' 
-      settings[:len] == args.length &&
-      settings[:startCol].include?(args[1].to_i) &&
-      settings[:endCol].include?(args[2].to_i) &&
-      settings[:row].include?(args[3].to_i) &&    
-      settings[:colour].include?(args[4])            
-    when 'V'
-      p settings
-      settings[:len] == args.length &&
-      settings[:column].include?(args[1].to_i) &&
-      settings[:startRow].include?(args[2].to_i) &&
-      settings[:endRow].include?(args[3].to_i) &&    
-      settings[:colour].include?(args[4])     
-    when 'S'
-      settings[:len] == args.length         
-    when 'C'
-      settings[:len] == args.length              
-    end            
-        
-  end  
+  def valid?(line)
+    case line[0]
+    when 'I'       
+      /\A[I]\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\z/.match(line) != nil
+    when 'C' 
+      /\A[C]\z/.match(line) != nil 
+    when 'L'  
+      /\A[L]\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\s[A-Z]\z/.match(line) != nil
+    when 'V' 
+      /\A[V]\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\s[A-Z]\z/.match(line) != nil
+    when 'H'
+      /\A[H]\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\s\b[0-9]{1,3}\b\s[A-Z]\z/.match(line) != nil
+    when 'S'       
+      /\A[S]\z/.match(line) != nil    
+    else
+      false
+    end 
+  end
 
  
   # represent bitmap with a two dimensional array
   def create(rows, cols)
-   @bitmap = Array.new(rows){Array.new(cols, 'O')}    
-   p @bitmap
+    if rows <= 250 && cols <= 250 
+      @bitmap = Array.new(rows){Array.new(cols, 'O')}          
+    else
+      return 'Please resubmit with M and N values less than or equal to 250' 
+    end   
   end 
 
   # set all pixels to white
   def clear
-     @bitmap.map! { |row| row.fill('O') }
-     p @bitmap 
+     @bitmap.map! { |row| row.fill('O') }   
   end
 
   #Colours the pixel (X,Y) with colour C.
   def colour(x, y, c) 
-    @bitmap[y-1][x-1] = c
-    p @bitmap
+    @bitmap[y-1][x-1] = c  
   end
   
   #Draw vertical segment of col C in column X between rows Y1 and Y2 (incl).
   def vertical(x, y1, y2, c) 
-    ([y1-1,y2-1].min).upto([y1-1,y2-1].max) do |num|
-      p num
+    ([y1-1,y2-1].min).upto([y1-1,y2-1].max) do |num|      
       @bitmap[num][x-1] = c
     end  
   end

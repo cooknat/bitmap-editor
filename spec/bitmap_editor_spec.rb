@@ -4,12 +4,9 @@ require './lib/bitmap_editor'
 bitmapEditor = BitmapEditor.new   
 
 describe '#valid?' do
-	it 'returns false if the argument array is the wrong size' do	
-	  expect(bitmapEditor.valid?(['V', 3, 4, 'G'])).to be_falsey
-	end	
-
-  it 'returns false if any of the arguments are not integers or single letters' do
- 	  expect(bitmapEditor.valid?(['L', 'tiger', '*', 's'])).to be_falsey
+	it 'returns false if a line does not match its given regex' do
+  	bitmapEditor.create(3,4)
+ 	  expect(bitmapEditor.valid?('L tiger * s')).to be_falsey
   end	   
 
   it 'returns false if the specified pixels are not within the bounds of the bitmap' do
@@ -26,8 +23,13 @@ end
 describe '#create' do 
 	it 'creates a white bitmap of specified size' do	     
 		 bitmapEditor.create(3,4)
-	    expect(bitmapEditor.bitmap).to eq([['O','O','O','O'],['O','O','O','O'],['O','O','O','O']]) 
+	   expect(bitmapEditor.bitmap).to eq([['O','O','O','O'],['O','O','O','O'],['O','O','O','O']]) 
 	end
+
+	it 'shows an error message if the height or width are greater than 250' do
+		message = bitmapEditor.create(260,220)
+		expect(message).to eq('Please resubmit with M and N values less than or equal to 250')
+	end	
 end
 
 describe '#colour' do
