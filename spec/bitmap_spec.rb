@@ -2,7 +2,7 @@ require './lib/bitmap'
 
 bitmap = Bitmap.new(6, 4)   
 
-describe '#valid?' do
+describe 'initialize' do
   it 'sets the columns equal to the supplied argument' do  	
  	  expect(bitmap.cols).to eq(6)
   end	
